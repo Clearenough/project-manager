@@ -1,9 +1,32 @@
 import React from 'react';
-import './App.css';
+import { Routes, Route } from 'react-router-dom';
+
+import Header from './components/Header/Header';
+import Boards from './pages/Boards';
+import Login from './pages/Login';
+import NotFoundPage from './pages/NotFound';
+import Registration from './pages/Registration';
+import Welcome from './pages/Welcome';
+
+import './App.scss'
+
 
 function App() {
   return (
-    <></>
+    <div className='wrapper'>
+      <Header/>
+      <div className="container">
+        <div className="content">
+          <Routes>
+            <Route path='/' element={<Welcome/>}/>
+            <Route path='/boards' element={<Boards/>}/>
+            <Route path='/registration' element={<Registration/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='*' element={<NotFoundPage/>}/>
+          </Routes>
+        </div>
+      </div>
+    </div>
   );
 }
 

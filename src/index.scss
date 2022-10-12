@@ -1,0 +1,14 @@
+@import './assets/scss/variables';
+
+*{
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  border: none;
+  list-style: none;
+  color: $platinum;
+}
+
+body {  
+  background: $skobeloff;
+}
