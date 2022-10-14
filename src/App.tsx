@@ -3,12 +3,13 @@ import { Routes, Route } from 'react-router-dom';
 
 import Header from './components/Header/Header';
 import Boards from './pages/Boards';
-import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import NotFoundPage from './pages/NotFound';
-import Registration from './pages/Registration';
+import Login from './pages/Login';
 import Welcome from './pages/Welcome';
 
 import './App.scss'
+
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Welcome/>}/>
             <Route path='/boards' element={<Boards/>}/>
-            <Route path='/registration' element={<Registration/>}/>
+            <Route path='/registration' element={<SignUp/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='*' element={<NotFoundPage/>}/>
           </Routes>
