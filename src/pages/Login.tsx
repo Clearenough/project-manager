@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm, SubmitHandler } from "react-hook-form";
+import { api } from '../services/api';
 
 
 interface ILogin {
@@ -26,6 +27,25 @@ export default function SignIn() {
   };
 
   const regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+
+  const [signup, {data}] = api.useSignUpMutation()
+
+  const handleClick = async() => {
+    await signup({
+      name: 'bab',
+      login: 'bubup',
+      password: '12341234'
+    })
+    console.log(data)
+  }
+
+  React.useEffect(() => {
+    const data = async() => {
+      const resp = await fetch('https://nameless-fjord-67107.herokuapp.com/users')
+      console.log(resp)
+    }
+    data()
+  })
 
   console.log(errors)
 
@@ -78,6 +98,14 @@ export default function SignIn() {
             {errors.password && <Typography variant="subtitle2" sx={{color: 'red'}}>Minimum password length 8 characters</Typography>}
             <Button
               type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Button
+              onClick={handleClick}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
