@@ -10,44 +10,43 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { api } from '../services/api';
-
-
-interface ILogin {
-  login: string,
-  password: string,
-}
-
+import { IUserSignIn } from '../@types/common';
+import { Alert } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../store/reducers/appSlice';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
 export default function SignIn() {
-  const {register, handleSubmit, formState: {errors}} = useForm<ILogin>()
-  const onSubmit: SubmitHandler<ILogin> = data => {
-    console.log(data)
+
+  const [signIn, {data, isLoading, error}] = api.useSignInMutation()
+  const {register, handleSubmit, formState: {errors}} = useForm<IUserSignIn>()
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const onSubmit:  SubmitHandler<IUserSignIn> = async userData => {
+    const result = await signIn(userData).unwrap();
+    dispatch(setToken(result.token));
+    localStorage.setItem('TOKEN_AUTH_LOCALSTORAGE', result.token);
+    navigate('/');
   };
 
-  const regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
 
-  const [signup, {data}] = api.useSignUpMutation()
 
-  const handleClick = async() => {
-    await signup({
-      name: 'bab',
-      login: 'bubup',
-      password: '12341234'
-    })
-    console.log(data)
-  }
 
-  React.useEffect(() => {
-    const data = async() => {
-      const resp = await fetch('https://nameless-fjord-67107.herokuapp.com/users')
-      console.log(resp)
-    }
-    data()
-  })
 
-  console.log(errors)
+  // const handleClick = async() => {
+  //   await signup({
+  //     name: 'bab',
+  //     login: 'bubup',
+  //     password: '12341234'
+  //   })
+  //   console.log(data)
+  // }
+
+  console.log('data', data)
 
   return (
 
@@ -104,17 +103,10 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Button
-              onClick={handleClick}
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
           </Box>
         </Box>
       </Container>
+      {error && <Alert variant="filled" severity="error">{}</Alert>}
     </ThemeProvider>
   );
 }

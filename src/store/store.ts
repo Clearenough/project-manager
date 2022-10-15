@@ -1,10 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { api } from '../services/api'
-
+import appReducer from './reducers/appSlice';
 
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
-
+  app: appReducer,
 })
 
 export const setupStore = () =>{
