@@ -12,10 +12,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { api } from '../services/api';
 import { IRequestError, IUserSignIn } from '../@types/common';
 import { Alert } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { setToken } from '../store/reducers/appSlice';
 import { useNavigate } from 'react-router-dom';
 import { apiErrorParser } from '../utils';
+import { useAppDispatch } from '../hooks/redux';
 
 
 const theme = createTheme();
@@ -28,7 +28,7 @@ export default function SignIn() {
   const {register, handleSubmit, formState: {errors}} = useForm<IUserSignIn>()
   
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const onSubmit:  SubmitHandler<IUserSignIn> = async userData => {

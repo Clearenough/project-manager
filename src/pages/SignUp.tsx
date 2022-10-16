@@ -14,21 +14,31 @@ import { api } from '../services/api';
 import { IRequestError, IUserSignUp } from '../@types/common';
 import { Alert } from '@mui/material';
 import { apiErrorParser } from '../utils';
+import { useAppDispatch } from '../hooks/redux';
+import { useNavigate } from 'react-router-dom';
+import { setToken } from '../store/reducers/appSlice';
 
 
 const theme = createTheme();
 
 export default function SignUp() {
 
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const {register, handleSubmit, formState: {errors}} = useForm<IUserSignUp>()
-  const [signUp, {error, isLoading, data}] = api.useSignUpMutation()
+  const [signUp, {error, isLoading, data, isError}] = api.useSignUpMutation()
   const [signIn] = api.useSignInMutation()
 
   const onSubmit: SubmitHandler<IUserSignUp> = async (userData) => {
     await signUp(userData)
 
-    const res = await signIn({login: userData.login, password: userData.password})
-    console.log(res)
+    if(!isError) {
+      const result = await signIn({login: userData.login, password: userData.password}).unwrap()
+      dispatch(setToken(result.token));
+      localStorage.setItem('TOKEN_AUTH_LOCALSTORAGE', result.token);
+      navigate('/boards');
+    }
   }
 
 
