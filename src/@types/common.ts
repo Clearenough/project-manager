@@ -1,7 +1,19 @@
-interface IError{
-  statusCode: number,
-  message: string,
+import { SerializedError } from "@reduxjs/toolkit";
+
+interface IBackendError {
+  status: number;
+  data: {
+    statusCode: number;
+    message: string;
+  };
 }
+
+interface IFetchError {
+  status: string;
+  error: string;
+}
+
+export type IRequestError = IBackendError | IFetchError | SerializedError | undefined;
 
 export interface IUserSignUp{
   name: string,
@@ -9,16 +21,11 @@ export interface IUserSignUp{
   password: string,
 }
 
-export interface IErrorSignUp{
 
-}
 
 export interface IUserSignIn{
   login: string,
   password: string,
 }
 
-export interface IErrorSignIn{
-  status: number,
-  data: IError,
-}
+

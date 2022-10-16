@@ -6,7 +6,7 @@ import { RootState } from '../store/store';
 const Endpoints = {
   users: 'users',
   signin: 'signin',
-  signup: 'singup',
+  signup: 'signup',
   boards: 'boards',
   columns: 'columns',
   tasks: 'tasks',

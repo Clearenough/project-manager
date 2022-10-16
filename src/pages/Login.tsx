@@ -10,18 +10,23 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { api } from '../services/api';
-import { IUserSignIn } from '../@types/common';
+import { IRequestError, IUserSignIn } from '../@types/common';
 import { Alert } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../store/reducers/appSlice';
 import { useNavigate } from 'react-router-dom';
+import { apiErrorParser } from '../utils';
+
 
 const theme = createTheme();
+
+
 
 export default function SignIn() {
 
   const [signIn, {data, isLoading, error}] = api.useSignInMutation()
   const {register, handleSubmit, formState: {errors}} = useForm<IUserSignIn>()
+  
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -34,19 +39,6 @@ export default function SignIn() {
   };
 
 
-
-
-
-  // const handleClick = async() => {
-  //   await signup({
-  //     name: 'bab',
-  //     login: 'bubup',
-  //     password: '12341234'
-  //   })
-  //   console.log(data)
-  // }
-
-  console.log('data', data)
 
   return (
 
@@ -106,7 +98,7 @@ export default function SignIn() {
           </Box>
         </Box>
       </Container>
-      {error && <Alert variant="filled" severity="error">{}</Alert>}
+      {error && <Alert variant="filled" severity="error">{apiErrorParser(error as IRequestError)}</Alert>}
     </ThemeProvider>
   );
 }

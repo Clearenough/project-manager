@@ -3,9 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -13,23 +10,27 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface ISignUp{
-  name: string,
-  login: string,
-  password: string,
-}
+import { api } from '../services/api';
+import { IRequestError, IUserSignUp } from '../@types/common';
+import { Alert } from '@mui/material';
+import { apiErrorParser } from '../utils';
 
 
 const theme = createTheme();
 
 export default function SignUp() {
 
-  const {register, handleSubmit, formState: {errors}} = useForm<ISignUp>()
+  const {register, handleSubmit, formState: {errors}} = useForm<IUserSignUp>()
+  const [signUp, {error, isLoading, data}] = api.useSignUpMutation()
+  const [signIn] = api.useSignInMutation()
 
-  const onSubmit: SubmitHandler<ISignUp> = (data) => {
-    console.log(data)
+  const onSubmit: SubmitHandler<IUserSignUp> = async (userData) => {
+    await signUp(userData)
+
+    const res = await signIn({login: userData.login, password: userData.password})
+    console.log(res)
   }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -101,6 +102,7 @@ export default function SignUp() {
           </Box>
         </Box>
       </Container>
+      {error && <Alert variant="filled" severity="error">{apiErrorParser(error as IRequestError)}</Alert>}
     </ThemeProvider>
   );
 }
