@@ -3,9 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { setToken } from '../../store/reducers/appSlice';
 import { logout } from '../../utils';
+import CottageIcon from '@mui/icons-material/Cottage';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+
+
 import CreateBoard from '../CreateBoard/CreateBoard';
 
 import styles from '../Header/Header.module.scss'
+import { Button } from '@mui/material';
 
 const Header: FC = () => {
 
@@ -36,29 +43,41 @@ const Header: FC = () => {
         <nav>
           <ul className={styles.navigation}>
             <li>
-              <Link to='/'>Home</Link>
+              <Link to='/'>
+                <CottageIcon sx={{color: 'white'}}/>
+                Home
+              </Link>
             </li>
             <li>
-              {token && <button onClick={(event) => clickHandler(event)}>Create new board</button>}
+              {token && <Button onClick={(event) => clickHandler(event)}>Create new board</Button>}
             </li>
             <div className={styles.rightSide}>
               { !token ?
                 <li>
-                  <Link to='/registration'>sign up</Link>
+                  <Link to='/registration'>
+                    <AppRegistrationIcon sx={{color: 'white'}}/>
+                    sign up
+                  </Link>
                 </li>
                 :
                 ''
               }
-              { !token ?          
+              { !token ?     
                 <li>
-                  <Link to='/login'>login</Link>
+                  <Link to='/login'>
+                    <LoginIcon sx={{color: 'white'}}/> 
+                    login
+                  </Link>
                 </li>
                 :
                 ''
               }
               { token && 
                 <li>
-                  <button onClick={onLogout}>Logout</button>
+                  <Button variant="text" onClick={onLogout}>
+                    <LogoutIcon sx={{color: 'white'}}/>
+                    Logout
+                  </Button>
                 </li>
               }
             </div>

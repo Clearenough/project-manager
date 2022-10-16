@@ -8,10 +8,20 @@
   .navigation {
     display: flex;
     justify-content: space-between;
+    padding-top: 10px;
 
-    a {
-      color: white;
-    }
+
+
+      a, button {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        color: white;
+      }
+
+
+
+
   }
 
   .rightSide {
