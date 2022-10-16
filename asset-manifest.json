@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/project-manager/static/css/main.f79926c1.css",
+    "main.js": "/project-manager/static/js/main.54ce9da2.js",
+    "index.html": "/project-manager/index.html",
+    "main.f79926c1.css.map": "/project-manager/static/css/main.f79926c1.css.map",
+    "main.54ce9da2.js.map": "/project-manager/static/js/main.54ce9da2.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f79926c1.css",
+    "static/js/main.54ce9da2.js"
+  ]
+}
