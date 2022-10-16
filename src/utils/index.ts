@@ -6,3 +6,7 @@ export function apiErrorParser(error: IRequestError) {
     return `${error.data.message}`;
   return ('api.errors.default');
 } 
+
+export function logout(){
+  localStorage.removeItem("TOKEN_AUTH_LOCALSTORAGE")
+}

@@ -35,7 +35,7 @@ export default function SignIn() {
     const result = await signIn(userData).unwrap();
     dispatch(setToken(result.token));
     localStorage.setItem('TOKEN_AUTH_LOCALSTORAGE', result.token);
-    navigate('/');
+    navigate('/boards');
   };
 
 

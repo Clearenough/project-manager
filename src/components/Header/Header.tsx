@@ -1,12 +1,19 @@
 import { FC, useState } from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { setToken } from '../../store/reducers/appSlice';
+import { logout } from '../../utils';
 import CreateBoard from '../CreateBoard/CreateBoard';
 
 import styles from '../Header/Header.module.scss'
 
 const Header: FC = () => {
 
-  const [isOpen, setIsOpen] = useState(false)
+
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const token = useAppSelector(state => state.app.token)
 
   type mouseEvent = React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>
 
@@ -15,6 +22,12 @@ const Header: FC = () => {
       event.preventDefault()
     }
     setIsOpen(!isOpen)
+  }
+
+  function onLogout(){
+    logout()
+    dispatch(setToken(null))
+    navigate('/')
   }
 
   return (
@@ -26,15 +39,28 @@ const Header: FC = () => {
               <Link to='/'>Home</Link>
             </li>
             <li>
-              <button onClick={(event) => clickHandler(event)}>Create new board</button>
+              {token && <button onClick={(event) => clickHandler(event)}>Create new board</button>}
             </li>
             <div className={styles.rightSide}>
-              <li>
-                <Link to='/registration'>sign up</Link>
-              </li>
-              <li>
-                <Link to='/login'>login</Link>
-              </li>
+              { !token ?
+                <li>
+                  <Link to='/registration'>sign up</Link>
+                </li>
+                :
+                ''
+              }
+              { !token ?          
+                <li>
+                  <Link to='/login'>login</Link>
+                </li>
+                :
+                ''
+              }
+              { token && 
+                <li>
+                  <button onClick={onLogout}>Logout</button>
+                </li>
+              }
             </div>
           </ul>
         </nav>
