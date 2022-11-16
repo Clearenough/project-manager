@@ -39,7 +39,7 @@ export default function SignUp() {
       const result = await signIn({ login: userData.login, password: userData.password }).unwrap();
       dispatch(setToken(result.token));
       localStorage.setItem('TOKEN_AUTH_LOCALSTORAGE', result.token);
-      navigate('/boards');
+      navigate('/bords');
     }
   };
 
