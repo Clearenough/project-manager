@@ -5,8 +5,8 @@ import { RootState } from '../store/store';
 
 const Endpoints = {
   users: 'users',
-  signin: 'signin',
-  signup: 'signup',
+  signin: 'auth/signin',
+  signup: 'auth/signup',
   boards: 'boards',
   columns: 'columns',
   tasks: 'tasks',
@@ -17,7 +17,7 @@ export const api = createApi({
   reducerPath: 'api',
   tagTypes: ['User', 'Board', 'Task', 'Column'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://immense-mountain-16315.herokuapp.com/',
+    baseUrl: 'https://final-task-backend-production-97a6.up.railway.app/',
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).app.token;
       if (token) {
@@ -28,8 +28,8 @@ export const api = createApi({
     },
   }),
   endpoints: (build) => ({
-    signUp: build.mutation<{id: string}, IUserSignUp>({
-      query: (body: IUserSignUp) => ({ 
+    signUp: build.mutation<{ id: string }, IUserSignUp>({
+      query: (body: IUserSignUp) => ({
         url: Endpoints.signup,
         method: 'POST',
         body
@@ -37,13 +37,15 @@ export const api = createApi({
       invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
 
-    signIn: build.mutation<{token: string}, IUserSignIn>({
-      query: (body: IUserSignIn) => ({ 
+    signIn: build.mutation<{ token: string }, IUserSignIn>({
+      query: (body: IUserSignIn) => ({
         url: Endpoints.signin,
         method: 'POST',
         body
       })
-    })
+    }),
+
+
   }),
 
 })

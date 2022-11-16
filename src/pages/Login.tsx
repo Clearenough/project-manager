@@ -8,7 +8,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { api } from '../services/api';
 import { IRequestError, IUserSignIn } from '../@types/common';
 import { Alert } from '@mui/material';
@@ -17,31 +17,28 @@ import { useNavigate } from 'react-router-dom';
 import { apiErrorParser } from '../utils';
 import { useAppDispatch } from '../hooks/redux';
 
-
 const theme = createTheme();
 
-
-
 export default function SignIn() {
+  const [signIn, { data, isLoading, error }] = api.useSignInMutation();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IUserSignIn>();
 
-  const [signIn, {data, isLoading, error}] = api.useSignInMutation()
-  const {register, handleSubmit, formState: {errors}} = useForm<IUserSignIn>()
-  
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-
-  const onSubmit:  SubmitHandler<IUserSignIn> = async userData => {
+  const onSubmit: SubmitHandler<IUserSignIn> = async (userData) => {
+    console.log(isLoading, 'isLoading');
     const result = await signIn(userData).unwrap();
     dispatch(setToken(result.token));
     localStorage.setItem('TOKEN_AUTH_LOCALSTORAGE', result.token);
     navigate('/boards');
   };
 
-
-
   return (
-
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -51,8 +48,7 @@ export default function SignIn() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -61,7 +57,7 @@ export default function SignIn() {
           </Typography>
           <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit(onSubmit)}>
             <TextField
-              {...register('login', {required: true})}
+              {...register('login', { required: true })}
               margin="normal"
               required
               fullWidth
@@ -74,9 +70,13 @@ export default function SignIn() {
                 minWidth: 396,
               }}
             />
-            {errors.login && <Typography variant="subtitle2" sx={{color: 'red'}}>This field is required</Typography>}
+            {errors.login && (
+              <Typography variant="subtitle2" sx={{ color: 'red' }}>
+                This field is required
+              </Typography>
+            )}
             <TextField
-              {...register('password', {required: true, minLength: 8,})}
+              {...register('password', { required: true, minLength: 8 })}
               margin="normal"
               required
               fullWidth
@@ -86,19 +86,22 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            {errors.password && <Typography variant="subtitle2" sx={{color: 'red'}}>Minimum password length 8 characters</Typography>}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            {errors.password && (
+              <Typography variant="subtitle2" sx={{ color: 'red' }}>
+                Minimum password length 8 characters
+              </Typography>
+            )}
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
           </Box>
         </Box>
       </Container>
-      {error && <Alert variant="filled" severity="error">{apiErrorParser(error as IRequestError)}</Alert>}
+      {error && (
+        <Alert variant="filled" severity="error">
+          {apiErrorParser(error as IRequestError)}
+        </Alert>
+      )}
     </ThemeProvider>
   );
 }
