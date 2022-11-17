@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { IUserSignIn, IUserSignUp } from '../@types/common'
+import { IBoard, IBoardCreate, IUserSignIn, IUserSignUp } from '../@types/common'
 import { RootState } from '../store/store';
 
 const Endpoints = {
@@ -45,6 +45,48 @@ export const api = createApi({
       })
     }),
 
+    //boards
+
+    getAllBoards: build.query<IBoard[], void>({
+      query: () => ({
+        url: Endpoints.boards,
+        method: 'GET',
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+            ...result.map(({ id }) => ({ type: 'Board' as const, id })),
+            { type: 'Board', id: 'LIST' },
+          ]
+          : [{ type: 'Board', id: 'LIST' }],
+    }),
+
+    createBoard: build.mutation<IBoard, IBoardCreate>({
+      query: (body: IBoardCreate) => ({
+        url: Endpoints.boards,
+        method: 'POST',
+        body
+      }),
+      invalidatesTags: [{ type: 'Board', id: 'LIST' }],
+    }),
+
+    deleteBoard: build.mutation<IBoard, string>({
+      query: (body: string) => ({
+        url: `${Endpoints.boards}/${body}`,
+        method: 'DELETE',
+        body
+      }),
+      invalidatesTags: [{ type: 'Board', id: 'LIST' }],
+    }),
+
+    updateBoard: build.mutation<IBoard, { body: IBoardCreate, id: string }>({
+      query: ({ body, id }) => ({
+        url: `${Endpoints.boards}/${id}`,
+        method: 'PUT',
+        body
+      }),
+      invalidatesTags: [{ type: 'Board', id: 'LIST' }],
+    })
 
   }),
 

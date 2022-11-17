@@ -15,7 +15,7 @@ interface IFetchError {
 
 export type IRequestError = IBackendError | IFetchError | SerializedError | undefined;
 
-export interface IUserSignUp{
+export interface IUserSignUp {
   name: string,
   login: string,
   password: string,
@@ -23,9 +23,17 @@ export interface IUserSignUp{
 
 
 
-export interface IUserSignIn{
+export interface IUserSignIn {
   login: string,
   password: string,
 }
 
+export interface IBoardCreate {
+  title: string,
+  owner: string,
+  users: string[],
+}
 
+export interface IBoard extends IBoardCreate {
+  id: string
+}
