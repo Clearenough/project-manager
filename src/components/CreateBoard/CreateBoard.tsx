@@ -29,7 +29,6 @@ const CreateBoard: FC<IPropsButton> = ({ handler }) => {
   } = useForm<ICreateBoard>();
   const [createBoard, { error }] = api.useCreateBoardMutation();
   const onSubmit: SubmitHandler<ICreateBoard> = (data) => {
-    console.log(data);
     const boardInfo: IBoardCreate = {
       title: `${data.name}|${data.description}`,
       owner: 'user',

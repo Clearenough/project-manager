@@ -7,7 +7,7 @@ export type IStateApp = {
 };
 
 export const initialState: IStateApp = {
-  token: localStorage.getItem(TOKEN_AUTH_LOCALSTORAGE) || null,
+  token: localStorage.getItem('TOKEN_AUTH_LOCALSTORAGE') || null,
 };
 
 const app = createSlice({

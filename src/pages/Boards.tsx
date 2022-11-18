@@ -1,5 +1,12 @@
+import BoardCard from '../components/BoardCard/BoardCard';
+import BoardCards from '../components/BoardCards/BoardCards';
+
 function Boards() {
-  return ( <>Boards</> );
+  return (
+    <>
+      <BoardCards />
+    </>
+  );
 }
 
 export default Boards;
