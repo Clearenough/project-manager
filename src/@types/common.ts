@@ -35,5 +35,5 @@ export interface IBoardCreate {
 }
 
 export interface IBoard extends IBoardCreate {
-  id: string
+  _id: string
 }

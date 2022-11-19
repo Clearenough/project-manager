@@ -55,7 +55,7 @@ export const api = createApi({
       providesTags: (result) =>
         result
           ? [
-            ...result.map(({ id }) => ({ type: 'Board' as const, id })),
+            ...result.map(({ _id }) => ({ type: 'Board' as const, _id })),
             { type: 'Board', id: 'LIST' },
           ]
           : [{ type: 'Board', id: 'LIST' }],

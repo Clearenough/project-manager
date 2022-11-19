@@ -12,9 +12,10 @@ function BoardCards() {
       <Grid2 container spacing={{ md: 3 }}>
         {data?.map((board, i) => {
           const [title, description] = boardInfoParser(board.title);
+          console.log(board._id);
           return (
             <Grid2 md={4}>
-              {<BoardCard title={title} description={description} key={board.id} />}
+              {<BoardCard title={title} description={description} id={board._id} key={board._id} />}
             </Grid2>
           );
         })}
