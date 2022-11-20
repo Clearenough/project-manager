@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useState } from 'react';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import { api } from '../../services/api';
+import CreateBoard from '../CreateBoard/CreateBoard';
 
 interface BoardCardProps {
   title: string;
@@ -15,8 +16,18 @@ interface BoardCardProps {
 }
 
 function BoardCard({ title, description, id }: BoardCardProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  type mouseEvent = React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>;
+
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [isCreateBoardOpen, setCreateBoardOpen] = useState(false);
   const [deleteBoard, { error }] = api.useDeleteBoardMutation();
+
+  function clickHandler(event?: mouseEvent) {
+    if (event) {
+      event.preventDefault();
+    }
+    setCreateBoardOpen(!isCreateBoardOpen);
+  }
 
   return (
     <>
@@ -25,18 +36,24 @@ function BoardCard({ title, description, id }: BoardCardProps) {
           {title}
         </Typography>
         <Typography>{description}</Typography>
-        <Button variant="contained">
+        <Button variant="contained" onClick={clickHandler}>
           <EditIcon />
           Edit
         </Button>
-        <Button variant="contained" onClick={() => setIsOpen(!isOpen)}>
+        <Button
+          variant="contained"
+          onClick={() => setConfirmationModalOpen(!isConfirmationModalOpen)}>
           <DeleteIcon />
           Delete
         </Button>
       </Card>
-      {isOpen && (
-        <ConfirmationModal setVisible={setIsOpen} confirmationFunction={() => deleteBoard(id)} />
+      {isConfirmationModalOpen && (
+        <ConfirmationModal
+          setVisible={setConfirmationModalOpen}
+          confirmationFunction={() => deleteBoard(id)}
+        />
       )}
+      {isCreateBoardOpen && <CreateBoard handler={clickHandler} id={id} />}
     </>
   );
 }

@@ -16,32 +16,33 @@ interface ICreateBoard {
 // }
 
 interface IPropsButton {
-  handler: (event?: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => void;
+  handler: (event?: mouseEvent) => void;
+  id?: string;
 }
 
 type mouseEvent = React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>;
 
-const CreateBoard: FC<IPropsButton> = ({ handler }) => {
+const CreateBoard: FC<IPropsButton> = ({ handler, id }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ICreateBoard>();
-  const [createBoard, { error }] = api.useCreateBoardMutation();
+  const [createBoard, { error: createError }] = api.useCreateBoardMutation();
+  const [updateBoard, { error: updateError }] = api.useUpdateBoardMutation();
   const onSubmit: SubmitHandler<ICreateBoard> = (data) => {
     const boardInfo: IBoardCreate = {
       title: `${data.name}|${data.description}`,
       owner: 'user',
       users: [],
     };
-    createBoard(boardInfo);
+    if (id) {
+      updateBoard({ body: boardInfo, id });
+    } else {
+      createBoard(boardInfo);
+    }
     handler();
   };
-
-  function submitHandler(e: mouseEvent) {
-    e.preventDefault();
-    console.log(e.target);
-  }
 
   return (
     <div className={styles.modal} onClick={handler}>
