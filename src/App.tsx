@@ -23,7 +23,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/boards" element={<Boards />} />
-            <Route path="/board/:id" element={<Board />} />
+            <Route path="/boards/:id" element={<Board />} />
             <Route path="/registration" element={token ? <Navigate to="/" /> : <SignUp />} />
             <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
             <Route path="pageNotFound" element={<NotFoundPage />} />
