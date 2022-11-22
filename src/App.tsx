@@ -10,6 +10,7 @@ import Welcome from './pages/Welcome';
 
 import './App.scss';
 import Footer from './components/Footer/Footer';
+import Board from './pages/Board';
 
 function App() {
   const token = localStorage.getItem('TOKEN_AUTH_LOCALSTORAGE');
@@ -22,6 +23,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/boards" element={<Boards />} />
+            <Route path="/board/:id" element={<Board />} />
             <Route path="/registration" element={token ? <Navigate to="/" /> : <SignUp />} />
             <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
             <Route path="pageNotFound" element={<NotFoundPage />} />

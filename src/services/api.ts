@@ -61,6 +61,14 @@ export const api = createApi({
           : [{ type: 'Board', id: 'LIST' }],
     }),
 
+    getBoardByID: build.query<IBoard, string>({
+      query: (id: string) => ({
+        url: `${Endpoints.boards}/${id}`,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Board', id: 'LIST' }],
+    }),
+
     createBoard: build.mutation<IBoard, IBoardCreate>({
       query: (body: IBoardCreate) => ({
         url: Endpoints.boards,
