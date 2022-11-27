@@ -57,7 +57,7 @@ const CreateBoard: FC<IPropsButton> = ({ handler, id }) => {
             color: 'black',
             marginBottom: '10px',
           }}>
-          Add Board
+          {id ? 'Edit Board' : 'Add Board'}
         </Typography>
 
         <div className={styles.inputs}>

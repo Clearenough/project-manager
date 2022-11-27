@@ -17,7 +17,12 @@ function ConfirmationModal({ setVisible, confirmationFunction }: Props) {
           <Button variant="outlined" onClick={confirmationFunction}>
             Confirm
           </Button>
-          <Button variant="outlined" onClick={() => setVisible(false)}>
+          <Button
+            variant="outlined"
+            onClick={(e) => {
+              setVisible(false);
+              e.stopPropagation();
+            }}>
             Close
           </Button>
         </Box>

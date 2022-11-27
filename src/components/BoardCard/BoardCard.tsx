@@ -25,6 +25,7 @@ function BoardCard({ title, description, id }: BoardCardProps) {
   function clickHandler(event?: mouseEvent) {
     if (event) {
       event.preventDefault();
+      event.stopPropagation();
     }
     setCreateBoardOpen(!isCreateBoardOpen);
   }
@@ -42,7 +43,10 @@ function BoardCard({ title, description, id }: BoardCardProps) {
         </Button>
         <Button
           variant="contained"
-          onClick={() => setConfirmationModalOpen(!isConfirmationModalOpen)}>
+          onClick={(e) => {
+            e.stopPropagation();
+            setConfirmationModalOpen(!isConfirmationModalOpen);
+          }}>
           <DeleteIcon />
           Delete
         </Button>
