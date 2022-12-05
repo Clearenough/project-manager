@@ -37,3 +37,30 @@ export interface IBoardCreate {
 export interface IBoard extends IBoardCreate {
   _id: string
 }
+
+
+
+export interface IColumnCreate {
+  boardId: string
+  title: string,
+  order: number,
+}
+0
+export interface IColumn extends IColumnCreate {
+  _id: string
+}
+
+
+export interface ITaskCreate {
+  boardId: string,
+  columnId: string,
+  title: string,
+  order: number,
+  description: string,
+  userId: string,
+  users: string[]
+}
+
+export interface ITask extends ITaskCreate {
+  _id: string,
+}

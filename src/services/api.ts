@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { IBoard, IBoardCreate, IUserSignIn, IUserSignUp } from '../@types/common'
+import { IBoard, IBoardCreate, IColumn, IColumnCreate, ITask, ITaskCreate, IUserSignIn, IUserSignUp } from '../@types/common'
 import { RootState } from '../store/store';
 
 const Endpoints = {
@@ -94,7 +94,108 @@ export const api = createApi({
         body
       }),
       invalidatesTags: [{ type: 'Board', id: 'LIST' }],
-    })
+    }),
+
+    //Columns
+
+    getAllColumns: build.query<IColumn[], string>({
+      query: (boardId: string) => ({
+        url: `${Endpoints.boards}/${boardId}/${Endpoints.columns}`,
+        method: 'GET',
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+            ...result.map(({ _id }) => ({ type: 'Column' as const, _id })),
+            { type: 'Column', id: 'LIST' },
+          ]
+          : [{ type: 'Column', id: 'LIST' }],
+    }),
+
+    getColumnById: build.query<IColumn, IColumn>({
+      query: (body: IColumn) => ({
+        url: `${Endpoints.boards}/${body}/${Endpoints.columns}/${body._id}`,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Column', id: 'LIST' }],
+    }),
+
+    createColumn: build.mutation<IColumn, IColumnCreate>({
+      query: (body: IColumnCreate) => ({
+        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}`,
+        method: 'POST',
+        body
+      }),
+      invalidatesTags: [{ type: 'Column', id: 'LIST' }],
+    }),
+
+    updateColumn: build.mutation<IColumn, IColumn>({
+      query: (body: IColumn) => ({
+        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body._id}`,
+        method: 'PUT',
+        body
+      }),
+      invalidatesTags: [{ type: 'Column', id: 'LIST' }],
+    }),
+
+    deleteColumn: build.mutation<IColumn, IColumn>({
+      query: (body: IColumn) => ({
+        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body._id}`,
+        method: 'DELETE',
+        body
+      })
+    }),
+
+
+    //Tasks
+
+    getAllTasks: build.query<ITask[], ITaskCreate>({
+      query: (body: ITaskCreate) => ({
+        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}`,
+        method: 'GET',
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+            ...result.map(({ _id }) => ({ type: 'Task' as const, _id })),
+            { type: 'Task', id: 'LIST' },
+          ]
+          : [{ type: 'Task', id: 'LIST' }],
+    }),
+
+    getTaskById: build.query<ITask, ITask>({
+      query: (body: ITask) => ({
+        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}/${body._id}`,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Task', id: 'LIST' }],
+    }),
+
+    createTask: build.mutation<ITask, ITaskCreate>({
+      query: (body: ITaskCreate) => ({
+        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}`,
+        method: 'POST',
+        body
+      }),
+      invalidatesTags: [{ type: 'Task', id: 'LIST' }],
+    }),
+
+    updateTask: build.mutation<ITask, ITask>({
+      query: (body: ITask) => ({
+        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}`,
+        method: 'PUT',
+        body
+      }),
+      invalidatesTags: [{ type: 'Task', id: 'LIST' }],
+    }),
+
+    deleteTask: build.mutation<ITask, ITask>({
+      query: (body: ITask) => ({
+        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}`,
+        method: 'DELETE',
+        body
+      })
+    }),
 
   }),
 

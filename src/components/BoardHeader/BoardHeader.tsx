@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { IBoard, IBoardCreate } from '../../@types/common';
 import { api } from '../../services/api';
+import { boardInfoParser } from '../../utils';
 
 import styles from './BoardHeader.module.scss';
 
@@ -14,8 +15,11 @@ interface Props {}
 function BoardHeader({}: Props) {
   const [isTitle, setIsTitle] = useState(true);
   const { id } = useParams();
-  const { data: boardInfo, error } = api.useGetBoardByIDQuery(id!);
+  // const { data: boardInfo, error } = api.useGetBoardByIDQuery(id!);
+  const { data: boardsInfo, error } = api.useGetAllBoardsQuery();
+  const boardInfo = boardsInfo?.filter((a) => a._id === id)[0];
   const [updateBoard, { error: changeTitleError }] = api.useUpdateBoardMutation();
+  const [title, description] = boardInfoParser(boardInfo?.title!);
 
   const {
     register,
@@ -41,7 +45,7 @@ function BoardHeader({}: Props) {
     <>
       <Box onClick={() => setIsTitle(false)} sx={{ cursor: 'pointer' }}>
         {isTitle ? (
-          <Typography variant="h5">{boardInfo?.title}</Typography>
+          <Typography variant="h5">{title}</Typography>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <Box>
