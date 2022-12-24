@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { decodeToken, IColumn, IColumnCreate } from '../../@types/common';
 import { api } from '../../services/api';
 import { setIsCreated } from '../../store/reducers/isColumnCreated';
+import styles from './CreateColumn.module.scss';
 
 interface IProps {
   handler: (event?: mouseEvent) => void;
@@ -55,8 +56,11 @@ function CreateColumn({ handler, setIsColumnCreated, column }: IProps) {
   };
 
   return (
-    <div onClick={handler}>
-      <form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
+    <div className={styles.modal} onClick={handler}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onClick={(e) => e.stopPropagation()}
+        className={styles.columnCreation}>
         <Typography
           variant="h5"
           align="center"
@@ -67,7 +71,7 @@ function CreateColumn({ handler, setIsColumnCreated, column }: IProps) {
           {column ? 'Edit Column' : 'Add Column'}
         </Typography>
 
-        <div>
+        <div className={styles.inputs}>
           <TextField
             {...register('title', { required: true })}
             name="title"
@@ -82,7 +86,7 @@ function CreateColumn({ handler, setIsColumnCreated, column }: IProps) {
             </Typography>
           )}
         </div>
-        <div>
+        <div className={styles.buttons}>
           <Button variant="text" color="success" type="submit">
             submit
           </Button>

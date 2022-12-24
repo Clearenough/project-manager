@@ -5,6 +5,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { decodeToken, ITask, ITaskCreate, IColumn } from '../../@types/common';
 import { useAppSelector } from './../../hooks/redux';
 import { api } from '../../services/api';
+import styles from './CreateTask.module.scss';
 
 interface IProps {
   handler: (event?: mouseEvent) => void;
@@ -53,8 +54,11 @@ function CreateTask({ handler, task, column }: IProps) {
   };
 
   return (
-    <div onClick={handler}>
-      <form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
+    <div className={styles.modal} onClick={handler}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onClick={(e) => e.stopPropagation()}
+        className={styles.taskCreation}>
         <Typography
           variant="h5"
           align="center"
@@ -62,10 +66,10 @@ function CreateTask({ handler, task, column }: IProps) {
             color: 'black',
             marginBottom: '10px',
           }}>
-          {task ? 'Edit Board' : 'Add Board'}
+          {task ? 'Edit Task' : 'Add Task'}
         </Typography>
 
-        <div>
+        <div className={styles.inputs}>
           <TextField
             {...register('title', { required: true })}
             name="title"
@@ -94,7 +98,7 @@ function CreateTask({ handler, task, column }: IProps) {
             </Typography>
           )}
         </div>
-        <div>
+        <div className={styles.buttons}>
           <Button variant="text" color="success" type="submit">
             submit
           </Button>
