@@ -4,10 +4,12 @@ export const TOKEN_AUTH_LOCALSTORAGE = 'kanban-token';
 
 export type IStateApp = {
   token: string | null;
+  id: string | null;
 };
 
 export const initialState: IStateApp = {
   token: localStorage.getItem('TOKEN_AUTH_LOCALSTORAGE') || null,
+  id: null,
 };
 
 const app = createSlice({
@@ -17,9 +19,12 @@ const app = createSlice({
     setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
     },
+    setUserId: (state, action: PayloadAction<string>) => {
+      state.id = action.payload
+    }
   },
 });
 
-export const { setToken } = app.actions;
+export const { setToken, setUserId } = app.actions;
 
 export default app.reducer;

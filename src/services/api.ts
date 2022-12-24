@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { IBoard, IBoardCreate, IColumn, IColumnCreate, ITask, ITaskCreate, IUserSignIn, IUserSignUp } from '../@types/common'
+import { IBoard, IBoardCreate, IColumn, IColumnCreate, IGetTasks, ITask, ITaskCreate, IUserSignIn, IUserSignUp } from '../@types/common'
 import { RootState } from '../store/store';
 
 const Endpoints = {
@@ -17,7 +17,7 @@ export const api = createApi({
   reducerPath: 'api',
   tagTypes: ['User', 'Board', 'Task', 'Column'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://final-task-backend-production-97a6.up.railway.app/',
+    baseUrl: 'https://ea-at1o.onrender.com/',
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).app.token;
       if (token) {
@@ -120,9 +120,9 @@ export const api = createApi({
       providesTags: [{ type: 'Column', id: 'LIST' }],
     }),
 
-    createColumn: build.mutation<IColumn, IColumnCreate>({
-      query: (body: IColumnCreate) => ({
-        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}`,
+    createColumn: build.mutation<IColumn, { body: IColumnCreate, id: string }>({
+      query: ({ body, id }) => ({
+        url: `${Endpoints.boards}/${id}/${Endpoints.columns}`,
         method: 'POST',
         body
       }),
@@ -149,8 +149,8 @@ export const api = createApi({
 
     //Tasks
 
-    getAllTasks: build.query<ITask[], ITaskCreate>({
-      query: (body: ITaskCreate) => ({
+    getAllTasks: build.query<ITask[], IGetTasks>({
+      query: (body: IGetTasks) => ({
         url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}`,
         method: 'GET',
       }),
@@ -171,9 +171,9 @@ export const api = createApi({
       providesTags: [{ type: 'Task', id: 'LIST' }],
     }),
 
-    createTask: build.mutation<ITask, ITaskCreate>({
-      query: (body: ITaskCreate) => ({
-        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}`,
+    createTask: build.mutation<ITask, { body: ITaskCreate, boardId: string, columnId: string }>({
+      query: ({ body, boardId, columnId }) => ({
+        url: `${Endpoints.boards}/${boardId}/${Endpoints.columns}/${columnId}/${Endpoints.tasks}`,
         method: 'POST',
         body
       }),

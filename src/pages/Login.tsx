@@ -10,12 +10,13 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { api } from '../services/api';
-import { IRequestError, IUserSignIn } from '../@types/common';
+import { decodeToken, IRequestError, IUserSignIn } from '../@types/common';
 import { Alert } from '@mui/material';
-import { setToken } from '../store/reducers/appSlice';
+import { setToken, setUserId } from '../store/reducers/appSlice';
 import { useNavigate } from 'react-router-dom';
 import { apiErrorParser } from '../utils';
 import { useAppDispatch } from '../hooks/redux';
+import { useJwt } from 'react-jwt';
 
 const theme = createTheme();
 
@@ -26,6 +27,7 @@ export default function SignIn() {
     handleSubmit,
     formState: { errors },
   } = useForm<IUserSignIn>();
+  const { decodedToken, isExpired } = useJwt(localStorage['TOKEN_AUTH_LOCALSTORAGE']);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -35,6 +37,8 @@ export default function SignIn() {
     const result = await signIn(userData).unwrap();
     dispatch(setToken(result.token));
     localStorage.setItem('TOKEN_AUTH_LOCALSTORAGE', result.token);
+    const userId = (decodedToken as decodeToken).id;
+    dispatch(setUserId(userId));
     navigate('/boards');
   };
 

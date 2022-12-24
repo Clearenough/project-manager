@@ -41,19 +41,22 @@ export interface IBoard extends IBoardCreate {
 
 
 export interface IColumnCreate {
-  boardId: string
   title: string,
   order: number,
 }
-0
+
 export interface IColumn extends IColumnCreate {
   _id: string
+  boardId: string
 }
 
 
-export interface ITaskCreate {
+export interface IGetTasks {
   boardId: string,
   columnId: string,
+}
+
+export interface ITaskCreate {
   title: string,
   order: number,
   description: string,
@@ -61,6 +64,13 @@ export interface ITaskCreate {
   users: string[]
 }
 
-export interface ITask extends ITaskCreate {
+export interface ITask extends ITaskCreate, IGetTasks {
   _id: string,
 }
+
+export interface decodeToken {
+  exp: number,
+  iat: number,
+  id: string,
+  login: string
+} 

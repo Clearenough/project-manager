@@ -3,10 +3,14 @@ import Button from '@mui/material/Button/Button';
 import Typography from '@mui/material/Typography/Typography';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useJwt } from 'react-jwt';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { IBoard, IBoardCreate } from '../../@types/common';
+import { decodeToken, IBoard, IBoardCreate } from '../../@types/common';
 import { api } from '../../services/api';
+import { RootState } from '../../store/store';
 import { boardInfoParser } from '../../utils';
+import CreateColumn from '../CreateColumn/CreateColumn';
 
 import styles from './BoardHeader.module.scss';
 
@@ -14,13 +18,17 @@ interface Props {}
 
 function BoardHeader({}: Props) {
   const [isTitle, setIsTitle] = useState(true);
+  // const isColumnCreated = useSelector((state: RootState) => state.columnCreator.isCreated);
+  const [isColumnCreated, setIsColumnCreated] = useState(false);
+  const [isCreateColumnModalOpen, setIsCreateColumnModalOpen] = useState(false);
   const { id } = useParams();
   // const { data: boardInfo, error } = api.useGetBoardByIDQuery(id!);
   const { data: boardsInfo, error } = api.useGetAllBoardsQuery();
   const boardInfo = boardsInfo?.filter((a) => a._id === id)[0];
   const [updateBoard, { error: changeTitleError }] = api.useUpdateBoardMutation();
   const [title, description] = boardInfoParser(boardInfo?.title!);
-
+  const { decodedToken, isExpired } = useJwt(localStorage['TOKEN_AUTH_LOCALSTORAGE']);
+  console.log(decodedToken);
   const {
     register,
     handleSubmit,
@@ -41,6 +49,11 @@ function BoardHeader({}: Props) {
     e.stopPropagation();
     setIsTitle(true);
   }
+
+  function setColumnIsCreated() {
+    setIsColumnCreated(true);
+  }
+
   return (
     <>
       <Box onClick={() => setIsTitle(false)} sx={{ cursor: 'pointer' }}>
@@ -60,7 +73,18 @@ function BoardHeader({}: Props) {
             <Button onClick={cancelHandler}>Cancel</Button>
           </form>
         )}
+        {!isColumnCreated && (
+          <Button onClick={() => setIsCreateColumnModalOpen(true)} variant="outlined">
+            Create Column
+          </Button>
+        )}
       </Box>
+      {isCreateColumnModalOpen && (
+        <CreateColumn
+          handler={() => setIsCreateColumnModalOpen(false)}
+          setIsColumnCreated={setColumnIsCreated}
+        />
+      )}
     </>
   );
 }
