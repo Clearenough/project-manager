@@ -7,10 +7,11 @@ import { ITask } from '../../@types/common';
 import { api } from '../../services/api';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import CreateTask from '../CreateTask/CreateTask';
+import styles from './TaskDescription.module.scss';
 
 interface IProps {
   task: ITask;
-  closeDescription: () => void;
+  closeDescription: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 function TaskDescription({ task, closeDescription }: IProps) {
@@ -20,37 +21,28 @@ function TaskDescription({ task, closeDescription }: IProps) {
 
   return (
     <>
-      <Box
-        onClick={closeDescription}
-        sx={{
-          position: 'absolute',
-          width: '100vw',
-          height: '100vh',
-          top: '0',
-          left: '0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba($color: rgb(0, 0, 0), $alpha: 0.4)',
-          zIndex: '1',
-        }}>
-        <Stack spacing={2}>
+      <div className={styles.modal} onClick={closeDescription}>
+        <div className={styles.taskDescription} onClick={(e) => e.stopPropagation()}>
           <Typography variant="h4">{task.title}</Typography>
           <Typography variant="h5">{task.description}</Typography>
-          <Button
-            onClick={() => setConfirmationModalOpen(true)}
-            variant="contained"
-            disableElevation>
-            Edit
-          </Button>
-          <Button
-            onClick={() => setConfirmationModalOpen(true)}
-            variant="contained"
-            disableElevation>
-            Delete
-          </Button>
-        </Stack>
-      </Box>
+          <div className={styles.buttons}>
+            <Button
+              onClick={() => setCreateTaskModalOpen(true)}
+              variant="text"
+              color="success"
+              disableElevation>
+              Edit
+            </Button>
+            <Button
+              onClick={() => setConfirmationModalOpen(true)}
+              variant="text"
+              color="warning"
+              disableElevation>
+              Delete
+            </Button>
+          </div>
+        </div>
+      </div>
       {isConfirmationModalOpen && (
         <ConfirmationModal
           setVisible={setConfirmationModalOpen}

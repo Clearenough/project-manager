@@ -17,7 +17,13 @@ function ColumnTask({ task }: IProps) {
         <Typography variant="h5">{task.title}</Typography>
       </Box>
       {taskDescription && (
-        <TaskDescription task={task} closeDescription={() => isTaskDescription(false)} />
+        <TaskDescription
+          task={task}
+          closeDescription={(e) => {
+            isTaskDescription(false);
+            e.stopPropagation();
+          }}
+        />
       )}
     </>
   );

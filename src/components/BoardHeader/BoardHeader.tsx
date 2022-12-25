@@ -28,7 +28,6 @@ function BoardHeader({}: Props) {
   const [updateBoard, { error: changeTitleError }] = api.useUpdateBoardMutation();
   const [title, description] = boardInfoParser(boardInfo?.title!);
   const { decodedToken, isExpired } = useJwt(localStorage['TOKEN_AUTH_LOCALSTORAGE']);
-  console.log(decodedToken);
   const {
     register,
     handleSubmit,
