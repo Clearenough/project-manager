@@ -1,0 +1,33 @@
+.modal{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($color: rgb(0, 0, 0), $alpha: 0.4);
+  z-index: 1;
+  
+  .taskCreation{
+    padding: 35px 70px;
+    display: flex;
+    flex-direction: column;
+    background: rgb(255, 255, 255);
+
+    .inputs{
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .buttons{
+      display: flex;
+      justify-content: end;
+      padding-top: 15px;
+      gap: 5px;
+    }
+  }
+
+}

@@ -1,0 +1,21 @@
+@import './../../assets/scss/variables';
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: $blue;
+
+  .githubLink {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    color: white;
+    text-align: center;
+  }
+}

@@ -1,0 +1,32 @@
+@import './../../assets/scss/variables';
+
+.header {
+  height: 50px;
+  background: $blue;
+
+
+  .navigation {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+
+
+
+      a, button {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        color: white;
+      }
+
+
+
+
+  }
+
+  .rightSide {
+    display: flex;
+    gap: 10px; 
+  }
+}
+
