@@ -13,8 +13,8 @@ function ColumnTask({ task }: IProps) {
 
   return (
     <>
-      <Box onClick={() => isTaskDescription(true)}>
-        <Typography variant="h5">{task.title}</Typography>
+      <Box onClick={() => isTaskDescription(true)} sx={{margin: '10px', backgroundColor: 'white', boxShadow: '6px 6px 8px 0px rgba(34, 60, 80, 0.2)', borderRadius: '3px', cursor: 'pointer'}}>
+        <Typography variant="h5" sx={{padding: '5px'}}>{task.title}</Typography>
       </Box>
       {taskDescription && (
         <TaskDescription
