@@ -7,14 +7,15 @@ import TaskDescription from "../TaskDescription/TaskDescription";
 
 interface IProps {
   task: ITask;
+  taskIndex: number;
 }
 
-function ColumnTask({ task }: IProps) {
+function ColumnTask({ task, taskIndex }: IProps) {
   const [taskDescription, isTaskDescription] = useState(false);
 
   return (
     <>
-      <Draggable draggableId={task._id} index={task.order}>
+      <Draggable draggableId={task._id} index={taskIndex}>
         {(provided) => (
           <Box
             onClick={() => isTaskDescription(true)}

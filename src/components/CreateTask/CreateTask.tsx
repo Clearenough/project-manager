@@ -1,21 +1,24 @@
-import Button from '@mui/material/Button/Button';
-import TextField from '@mui/material/TextField/TextField';
-import Typography from '@mui/material/Typography/Typography';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { decodeToken, ITask, ITaskCreate, IColumn } from '../../@types/common';
-import { useAppSelector } from './../../hooks/redux';
-import { api } from '../../services/api';
-import styles from './CreateTask.module.scss';
+import Button from "@mui/material/Button/Button";
+import TextField from "@mui/material/TextField/TextField";
+import Typography from "@mui/material/Typography/Typography";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { decodeToken, ITask, ITaskCreate, IColumn } from "../../@types/common";
+import { useAppSelector } from "./../../hooks/redux";
+import { api } from "../../services/api";
+import styles from "./CreateTask.module.scss";
 
 interface IProps {
   handler: (event?: mouseEvent) => void;
+  order?: number | undefined;
   task?: ITask;
   column?: IColumn;
 }
 
-type mouseEvent = React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>;
+type mouseEvent =
+  | React.MouseEvent<HTMLButtonElement>
+  | React.MouseEvent<HTMLDivElement>;
 
-function CreateTask({ handler, task, column }: IProps) {
+function CreateTask({ handler, task, column, order }: IProps) {
   const {
     register,
     handleSubmit,
@@ -40,15 +43,19 @@ function CreateTask({ handler, task, column }: IProps) {
         columnId: task.columnId,
       };
       updateTask(newTask);
-    } else if (column && userId) {
+    } else if (column && userId && order) {
       const newTask: ITaskCreate = {
         title: data.title,
-        order: 0,
+        order,
         description: data.description,
         userId,
         users: [],
       };
-      createTask({ body: newTask, boardId: column.boardId, columnId: column._id });
+      createTask({
+        body: newTask,
+        boardId: column.boardId,
+        columnId: column._id,
+      });
       handler();
     }
   };
@@ -58,20 +65,22 @@ function CreateTask({ handler, task, column }: IProps) {
       <form
         onSubmit={handleSubmit(onSubmit)}
         onClick={(e) => e.stopPropagation()}
-        className={styles.taskCreation}>
+        className={styles.taskCreation}
+      >
         <Typography
           variant="h5"
           align="center"
           sx={{
-            color: 'black',
-            marginBottom: '10px',
-          }}>
-          {task ? 'Edit Task' : 'Add Task'}
+            color: "black",
+            marginBottom: "10px",
+          }}
+        >
+          {task ? "Edit Task" : "Add Task"}
         </Typography>
 
         <div className={styles.inputs}>
           <TextField
-            {...register('title', { required: true })}
+            {...register("title", { required: true })}
             name="title"
             label="task title"
             variant="outlined"
@@ -79,12 +88,12 @@ function CreateTask({ handler, task, column }: IProps) {
             error={errors.title && true}
           />
           {errors.title && (
-            <Typography variant="subtitle2" sx={{ color: 'red' }}>
+            <Typography variant="subtitle2" sx={{ color: "red" }}>
               title is required
             </Typography>
           )}
           <TextField
-            {...register('description', { required: true })}
+            {...register("description", { required: true })}
             name="description"
             label="task description"
             variant="outlined"
@@ -93,7 +102,7 @@ function CreateTask({ handler, task, column }: IProps) {
             error={errors.description && true}
           />
           {errors.description && (
-            <Typography variant="subtitle2" sx={{ color: 'red' }}>
+            <Typography variant="subtitle2" sx={{ color: "red" }}>
               description is required
             </Typography>
           )}
