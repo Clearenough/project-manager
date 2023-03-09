@@ -68,26 +68,79 @@ function BoardColumns() {
     }
 
     if (destination.droppableId !== source.droppableId) {
-      const task = tasksByBoards
-        .get(source.droppableId)
-        ?.find((element) => element._id === draggableId);
+      console.log(destination.index, source.index);
 
-      console.log(task, "asf");
+      let destinationArray = sortDataByOrder([
+        ...tasksByBoards.get(destination.droppableId)!,
+      ])!;
+      let sourceArray = sortDataByOrder([
+        ...tasksByBoards.get(source.droppableId)!,
+      ])!;
 
-      if (task) {
-        deleteTask(task);
+      const movedTask = sourceArray?.splice(source.index, 1)[0];
+
+      if (movedTask) {
+        deleteTask(movedTask);
+        console.log("delete", movedTask);
+
+        destinationArray?.splice(destination.index, 0, movedTask);
+
+        console.log(destinationArray, sourceArray);
 
         createTask({
           body: {
-            title: task.title,
-            order: 0,
-            description: task.description,
-            userId: task.userId,
-            users: task.users,
+            title: movedTask.title,
+            order: destination.index,
+            description: movedTask.description,
+            userId: movedTask.userId,
+            users: movedTask.users,
           },
           boardId: id!,
           columnId: destination.droppableId,
         });
+        console.log("create");
+
+        for (let i = 0; i < sourceArray.length; i++) {
+          if (sourceArray[i].order !== i) {
+            const obj = { ...sourceArray[i] };
+            obj.order = i;
+            console.log(obj);
+            const updatedObject: ITaskUpdate = {
+              title: obj.title,
+              order: obj.order,
+              description: obj.description,
+              userId: obj.userId,
+              users: obj.users,
+              columnId: obj.columnId,
+            };
+            updateTask({
+              body: updatedObject,
+              boardId: obj.boardId,
+              _id: obj._id,
+            });
+          }
+        }
+
+        for (let i = 0; i < destinationArray.length; i++) {
+          if (destinationArray[i].order !== i) {
+            const obj = { ...destinationArray[i] };
+            obj.order = i;
+            console.log(obj);
+            const updatedObject: ITaskUpdate = {
+              title: obj.title,
+              order: obj.order,
+              description: obj.description,
+              userId: obj.userId,
+              users: obj.users,
+              columnId: obj.columnId,
+            };
+            updateTask({
+              body: updatedObject,
+              boardId: obj.boardId,
+              _id: obj._id,
+            });
+          }
+        }
       }
 
       return;
