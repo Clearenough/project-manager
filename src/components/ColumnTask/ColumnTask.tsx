@@ -13,9 +13,11 @@ interface IProps {
 function ColumnTask({ task, taskIndex }: IProps) {
   const [taskDescription, isTaskDescription] = useState(false);
 
+  console.log(task._id);
+
   return (
     <>
-      <Draggable draggableId={task._id} index={taskIndex}>
+      <Draggable draggableId={task._id} index={taskIndex} key={task._id}>
         {(provided) => (
           <Box
             onClick={() => isTaskDescription(true)}

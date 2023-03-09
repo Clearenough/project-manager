@@ -8,6 +8,7 @@ import {
   IGetTasks,
   ITask,
   ITaskCreate,
+  ITaskUpdate,
   IUserSignIn,
   IUserSignUp,
 } from "../@types/common";
@@ -192,9 +193,12 @@ export const api = createApi({
       invalidatesTags: [{ type: "Task", id: "LIST" }],
     }),
 
-    updateTask: build.mutation<ITask, ITask>({
-      query: (body: ITask) => ({
-        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}/${body._id}`,
+    updateTask: build.mutation<
+      ITask,
+      { body: ITaskUpdate; boardId: string; _id: string }
+    >({
+      query: ({ body, boardId, _id }) => ({
+        url: `${Endpoints.boards}/${boardId}/${Endpoints.columns}/${body.columnId}/${Endpoints.tasks}/${_id}`,
         method: "PUT",
         body,
       }),

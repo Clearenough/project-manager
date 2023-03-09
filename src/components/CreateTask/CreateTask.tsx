@@ -2,7 +2,13 @@ import Button from "@mui/material/Button/Button";
 import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { decodeToken, ITask, ITaskCreate, IColumn } from "../../@types/common";
+import {
+  decodeToken,
+  ITask,
+  ITaskCreate,
+  IColumn,
+  ITaskUpdate,
+} from "../../@types/common";
 import { useAppSelector } from "./../../hooks/redux";
 import { api } from "../../services/api";
 import styles from "./CreateTask.module.scss";
@@ -31,19 +37,22 @@ function CreateTask({ handler, task, column, order }: IProps) {
   console.log(userId);
 
   const onSubmit: SubmitHandler<ITaskCreate> = (data) => {
+    console.log(order);
     if (task) {
-      const newTask: ITask = {
-        _id: task._id,
+      const newTask: ITaskUpdate = {
         title: data.title,
         order: task.order,
         description: data.description,
         userId: task.userId,
         users: task.users,
-        boardId: task.boardId,
         columnId: task.columnId,
       };
-      updateTask(newTask);
-    } else if (column && userId && order) {
+      updateTask({
+        body: newTask,
+        boardId: column?.boardId!,
+        _id: userId!,
+      });
+    } else if (column && userId && order !== undefined) {
       const newTask: ITaskCreate = {
         title: data.title,
         order,
@@ -56,6 +65,7 @@ function CreateTask({ handler, task, column, order }: IProps) {
         boardId: column.boardId,
         columnId: column._id,
       });
+
       handler();
     }
   };

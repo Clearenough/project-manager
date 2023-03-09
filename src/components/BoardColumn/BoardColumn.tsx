@@ -9,6 +9,8 @@ import { api } from "../../services/api";
 import ColumnTask from "../ColumnTask/ColumnTask";
 import CreateTask from "../CreateTask/CreateTask";
 import { calculateProvidedBy } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
+import { sortDataByOrder } from "../../utils";
+import { StrictModeDroppable } from "../Droppable";
 
 interface IProps {
   column: IColumn;
@@ -25,6 +27,8 @@ function BoardColumn({ column, getTasks }: IProps) {
     getTasks(data!, column._id);
   });
 
+  const sortedData = sortDataByOrder(data);
+  console.log("rerender", sortedData);
   return (
     <>
       <Box
@@ -34,12 +38,12 @@ function BoardColumn({ column, getTasks }: IProps) {
           backgroundColor: "#ebecf0",
         }}
       >
-        <Droppable droppableId={column._id}>
+        <StrictModeDroppable droppableId={column._id}>
           {(provided) => (
             <Stack {...provided.droppableProps} ref={provided.innerRef}>
-              {data &&
-                data.map((task, index) => (
-                  <ColumnTask task={task} taskIndex={index} />
+              {sortedData &&
+                sortedData.map((task, index) => (
+                  <ColumnTask task={task} taskIndex={task.order} />
                 ))}
               <Button
                 variant="outlined"
@@ -50,14 +54,14 @@ function BoardColumn({ column, getTasks }: IProps) {
               {provided.placeholder}
             </Stack>
           )}
-        </Droppable>
+        </StrictModeDroppable>
       </Box>
       {isCreateTaskModalOpen && (
         <CreateTask
           handler={() => setCreateTaskModalOpen(false)}
           task={undefined}
           column={column}
-          order={data ? data.length + 1 : undefined}
+          order={data ? data.length : undefined}
         />
       )}
     </>

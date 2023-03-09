@@ -2,8 +2,14 @@ import Box from "@mui/material/Box/Box";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useJwt } from "react-jwt";
 import { useParams } from "react-router-dom";
-import { decodeToken, ITask } from "../../@types/common";
+import {
+  decodeToken,
+  ITask,
+  ITaskCreate,
+  ITaskUpdate,
+} from "../../@types/common";
 import { api } from "../../services/api";
+import { sortDataByOrder } from "../../utils";
 import BoardColumn from "../BoardColumn/BoardColumn";
 
 interface ITasksByBoards {
@@ -14,7 +20,8 @@ function BoardColumns() {
   const { id } = useParams();
   const { data, error } = api.useGetAllColumnsQuery(id!);
   const [createTask, { error: createError }] = api.useCreateTaskMutation();
-  const [deleteTask, { error: updateError }] = api.useDeleteTaskMutation();
+  const [deleteTask, { error: deleteError }] = api.useDeleteTaskMutation();
+  const [updateTask, { error: updateError }] = api.useUpdateTaskMutation();
   const tasksByBoards = new Map<string, ITask[]>();
 
   // if (data && id) {
@@ -65,7 +72,7 @@ function BoardColumns() {
         .get(source.droppableId)
         ?.find((element) => element._id === draggableId);
 
-      console.log(task);
+      console.log(task, "asf");
 
       if (task) {
         deleteTask(task);
@@ -82,6 +89,48 @@ function BoardColumns() {
           columnId: destination.droppableId,
         });
       }
+
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index !== source.index
+    ) {
+      let taskArray = sortDataByOrder([
+        ...tasksByBoards.get(source.droppableId)!,
+      ])!;
+      let transformedTaskArray = [...taskArray]!;
+      console.log(taskArray, transformedTaskArray);
+      const movedTask = transformedTaskArray?.splice(source.index, 1);
+      if (movedTask) {
+        transformedTaskArray?.splice(destination.index, 0, movedTask[0]);
+        console.log(transformedTaskArray, "after transformation");
+      }
+      for (let i = 0; i < taskArray!.length; i++) {
+        if (taskArray[i].order !== transformedTaskArray[i].order) {
+          // console.log(i, transformedTaskArray[i]);
+          const obj = { ...transformedTaskArray[i] };
+          obj.order = i;
+          // transformedTaskArray[i] = obj;
+          // console.log(obj);
+          const updatedObject: ITaskUpdate = {
+            title: obj.title,
+            order: obj.order,
+            description: obj.description,
+            userId: obj.userId,
+            users: obj.users,
+            columnId: obj.columnId,
+          };
+          console.log(updatedObject, "after update");
+          updateTask({
+            body: updatedObject,
+            boardId: obj.boardId,
+            _id: obj._id,
+          });
+        }
+      }
+      // console.log(transformedTaskArray, "a");
     }
   }
 
