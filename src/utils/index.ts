@@ -1,4 +1,4 @@
-import { IRequestError, ITask } from "../@types/common";
+import { IColumn, IRequestError, ITask } from "../@types/common";
 
 export function apiErrorParser(error: IRequestError) {
   if (!error) return;
@@ -16,10 +16,10 @@ export function boardInfoParser(data: string) {
   return [title, description];
 }
 
-export function sortDataByOrder(data: ITask[] | undefined) {
+export function sortDataByOrder(data: IColumn[] | ITask[] | undefined) {
   if (data) {
     data = [...data];
     return data.sort((a, b) => a.order - b.order);
   }
-  return data;
+  return null;
 }

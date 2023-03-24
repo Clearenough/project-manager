@@ -37,8 +37,9 @@ function CreateTask({ handler, task, column, order }: IProps) {
   console.log(userId);
 
   const onSubmit: SubmitHandler<ITaskCreate> = (data) => {
-    console.log(order);
+    console.log(order, "haha");
     if (task) {
+      console.log(task);
       const newTask: ITaskUpdate = {
         title: data.title,
         order: task.order,
@@ -47,11 +48,13 @@ function CreateTask({ handler, task, column, order }: IProps) {
         users: task.users,
         columnId: task.columnId,
       };
+      console.log(newTask);
       updateTask({
         body: newTask,
-        boardId: column?.boardId!,
-        _id: userId!,
+        boardId: task.boardId,
+        _id: task._id,
       });
+      handler();
     } else if (column && userId && order !== undefined) {
       const newTask: ITaskCreate = {
         title: data.title,

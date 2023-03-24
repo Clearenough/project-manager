@@ -139,9 +139,12 @@ export const api = createApi({
       invalidatesTags: [{ type: "Column", id: "LIST" }],
     }),
 
-    updateColumn: build.mutation<IColumn, IColumn>({
-      query: (body: IColumn) => ({
-        url: `${Endpoints.boards}/${body.boardId}/${Endpoints.columns}/${body._id}`,
+    updateColumn: build.mutation<
+      IColumn,
+      { body: IColumnCreate; boardId: string; columnId: string }
+    >({
+      query: ({ body, boardId, columnId }) => ({
+        url: `${Endpoints.boards}/${boardId}/${Endpoints.columns}/${columnId}`,
         method: "PUT",
         body,
       }),
