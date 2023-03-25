@@ -19,7 +19,6 @@ interface Props {}
 function BoardHeader({}: Props) {
   const [isTitle, setIsTitle] = useState(true);
   // const isColumnCreated = useSelector((state: RootState) => state.columnCreator.isCreated);
-  const [isColumnCreated, setIsColumnCreated] = useState(false);
   const [isCreateColumnModalOpen, setIsCreateColumnModalOpen] = useState(false);
   const { id } = useParams();
   // const { data: boardInfo, error } = api.useGetBoardByIDQuery(id!);
@@ -55,15 +54,12 @@ function BoardHeader({}: Props) {
     setIsTitle(true);
   }
 
-  function setColumnIsCreated() {
-    setIsColumnCreated(true);
-  }
-
   return (
     <>
       <Box
         sx={{
           display: "flex",
+          gap: "10px",
           flexDirection: "column",
           alignItems: "flex-start",
         }}
@@ -109,7 +105,6 @@ function BoardHeader({}: Props) {
       {isCreateColumnModalOpen && (
         <CreateColumn
           handler={() => setIsCreateColumnModalOpen(false)}
-          setIsColumnCreated={setColumnIsCreated}
           order={columnsInfo ? columnsInfo.length : undefined}
         />
       )}

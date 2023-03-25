@@ -13,6 +13,7 @@ import { calculateProvidedBy } from "@reduxjs/toolkit/dist/query/endpointDefinit
 import { sortDataByOrder } from "../../utils";
 import { StrictModeDroppable } from "../Droppable";
 import Typography from "@mui/material/Typography/Typography";
+import CreateColumn from "../CreateColumn/CreateColumn";
 
 interface IProps {
   column: IColumn;
@@ -26,6 +27,7 @@ function BoardColumn({ column, columnIndex, getTasks }: IProps) {
     boardId: column.boardId,
   });
   const [isCreateTaskModalOpen, setCreateTaskModalOpen] = useState(false);
+  const [isCreateColumnModalOpen, setCreateColumnModalOpen] = useState(false);
   useEffect(() => {
     getTasks(data!, column._id);
   });
@@ -45,9 +47,25 @@ function BoardColumn({ column, columnIndex, getTasks }: IProps) {
             {...provided.draggableProps}
             ref={provided.innerRef}
           >
-            <Typography variant="h5" {...provided.dragHandleProps}>
-              {column.title}
-            </Typography>
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between" }}
+              {...provided.dragHandleProps}
+            >
+              <Typography variant="h5">{column.title}</Typography>
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                  userSelect: "none",
+                  fontSize: "1.5rem",
+                  lineHeight: "1",
+                }}
+                variant="body1"
+                onClick={() => setCreateColumnModalOpen(true)}
+              >
+                ...
+              </Typography>
+            </Box>
+
             <StrictModeDroppable droppableId={column._id} type="TASK">
               {(provided) => (
                 <Stack {...provided.droppableProps} ref={provided.innerRef}>
@@ -75,6 +93,12 @@ function BoardColumn({ column, columnIndex, getTasks }: IProps) {
           task={undefined}
           column={column}
           order={data ? data.length : undefined}
+        />
+      )}
+      {isCreateColumnModalOpen && (
+        <CreateColumn
+          handler={() => setCreateColumnModalOpen(false)}
+          column={column}
         />
       )}
     </>

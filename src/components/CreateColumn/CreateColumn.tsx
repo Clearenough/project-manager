@@ -12,7 +12,6 @@ import styles from "./CreateColumn.module.scss";
 
 interface IProps {
   handler: (event?: mouseEvent) => void;
-  setIsColumnCreated: () => void;
   column?: IColumn;
   order?: number | undefined;
 }
@@ -21,7 +20,7 @@ type mouseEvent =
   | React.MouseEvent<HTMLButtonElement>
   | React.MouseEvent<HTMLDivElement>;
 
-function CreateColumn({ handler, setIsColumnCreated, column, order }: IProps) {
+function CreateColumn({ handler, column, order }: IProps) {
   const {
     register,
     handleSubmit,
@@ -45,7 +44,6 @@ function CreateColumn({ handler, setIsColumnCreated, column, order }: IProps) {
         };
         dispatch(setIsCreated(true));
         createColumn({ body: newColumn, id: boardId });
-        setIsColumnCreated();
       } else {
         const updatedColumn: IColumnCreate = {
           title: data.title,
