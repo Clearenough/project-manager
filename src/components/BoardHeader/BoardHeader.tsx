@@ -61,13 +61,32 @@ function BoardHeader({}: Props) {
 
   return (
     <>
-      <Box onClick={() => setIsTitle(false)} sx={{ cursor: "pointer" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        }}
+      >
         {isTitle ? (
-          <Typography variant="h5">{title}</Typography>
+          <Typography
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsTitle(false);
+            }}
+            variant="h5"
+            sx={{ cursor: "pointer", paddingRight: "50px" }}
+          >
+            {title}
+          </Typography>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-            <Box>
-              <input type="text" {...register("title", { required: true })} />
+            <Box sx={{ display: "flex" }}>
+              <input
+                type="text"
+                {...register("title", { required: true })}
+                className={styles.input}
+              />
               {errors.title && (
                 <Typography variant="subtitle2" sx={{ color: "red" }}>
                   this field is required
