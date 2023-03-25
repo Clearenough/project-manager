@@ -15,6 +15,7 @@ import { api } from "../../services/api";
 import { sortDataByOrder } from "../../utils";
 import BoardColumn from "../BoardColumn/BoardColumn";
 import { StrictModeDroppable } from "../Droppable";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 interface ITasksByBoards {
   boardId: string;
@@ -25,9 +26,14 @@ function BoardColumns() {
   const { data, error } = api.useGetAllColumnsQuery(id!);
   const [createTask, { error: createError }] = api.useCreateTaskMutation();
   const [deleteTask, { error: deleteError }] = api.useDeleteTaskMutation();
-  const [updateTask, { error: taskUpdateError }] = api.useUpdateTaskMutation();
-  const [updateColumn, { error: columnUpdateError }] =
-    api.useUpdateColumnMutation();
+  const [
+    updateTask,
+    { error: taskUpdateError, isLoading: isUpdateTaskLoading },
+  ] = api.useUpdateTaskMutation();
+  const [
+    updateColumn,
+    { error: columnUpdateError, isLoading: isUpdateColumnLoading },
+  ] = api.useUpdateColumnMutation();
   const tasksByBoards = new Map<string, ITask[]>();
 
   const sortedColumns = sortDataByOrder(data)!;
@@ -249,11 +255,10 @@ function BoardColumns() {
           </Box>
         )}
       </StrictModeDroppable>
+      {isUpdateColumnLoading && <LoadingScreen />}
+      {isUpdateTaskLoading && <LoadingScreen />}
     </DragDropContext>
   );
 }
 
 export default BoardColumns;
-function updateColumn(arg0: { body: IColumn; boardId: string; _id: string }) {
-  throw new Error("Function not implemented.");
-}

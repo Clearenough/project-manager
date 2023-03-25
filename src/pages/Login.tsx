@@ -1,22 +1,23 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { api } from '../services/api';
-import { decodeToken, IRequestError, IUserSignIn } from '../@types/common';
-import { Alert } from '@mui/material';
-import { setToken, setUserId } from '../store/reducers/appSlice';
-import { useNavigate } from 'react-router-dom';
-import { apiErrorParser } from '../utils';
-import { useAppDispatch } from '../hooks/redux';
-import { useJwt } from 'react-jwt';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { api } from "../services/api";
+import { decodeToken, IRequestError, IUserSignIn } from "../@types/common";
+import { Alert } from "@mui/material";
+import { setToken, setUserId } from "../store/reducers/appSlice";
+import { useNavigate } from "react-router-dom";
+import { apiErrorParser } from "../utils";
+import { useAppDispatch } from "../hooks/redux";
+import { useJwt } from "react-jwt";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const theme = createTheme();
 
@@ -27,19 +28,21 @@ export default function SignIn() {
     handleSubmit,
     formState: { errors },
   } = useForm<IUserSignIn>();
-  const { decodedToken, isExpired } = useJwt(localStorage['TOKEN_AUTH_LOCALSTORAGE']);
+  const { decodedToken, isExpired } = useJwt(
+    localStorage["TOKEN_AUTH_LOCALSTORAGE"]
+  );
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<IUserSignIn> = async (userData) => {
-    console.log(isLoading, 'isLoading');
+    console.log(isLoading, "isLoading");
     const result = await signIn(userData).unwrap();
     dispatch(setToken(result.token));
-    localStorage.setItem('TOKEN_AUTH_LOCALSTORAGE', result.token);
+    localStorage.setItem("TOKEN_AUTH_LOCALSTORAGE", result.token);
     const userId = (decodedToken as decodeToken).id;
     dispatch(setUserId(userId));
-    navigate('/boards');
+    navigate("/boards");
   };
 
   return (
@@ -49,19 +52,25 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit(onSubmit)}>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1 }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <TextField
-              {...register('login', { required: true })}
+              {...register("login", { required: true })}
               margin="normal"
               required
               fullWidth
@@ -75,12 +84,12 @@ export default function SignIn() {
               }}
             />
             {errors.login && (
-              <Typography variant="subtitle2" sx={{ color: 'red' }}>
+              <Typography variant="subtitle2" sx={{ color: "red" }}>
                 This field is required
               </Typography>
             )}
             <TextField
-              {...register('password', { required: true, minLength: 8 })}
+              {...register("password", { required: true, minLength: 8 })}
               margin="normal"
               required
               fullWidth
@@ -91,11 +100,16 @@ export default function SignIn() {
               autoComplete="current-password"
             />
             {errors.password && (
-              <Typography variant="subtitle2" sx={{ color: 'red' }}>
+              <Typography variant="subtitle2" sx={{ color: "red" }}>
                 Minimum password length 8 characters
               </Typography>
             )}
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Sign In
             </Button>
           </Box>
@@ -106,6 +120,7 @@ export default function SignIn() {
           {apiErrorParser(error as IRequestError)}
         </Alert>
       )}
+      {isLoading && <LoadingScreen />}
     </ThemeProvider>
   );
 }
