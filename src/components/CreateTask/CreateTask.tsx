@@ -2,13 +2,7 @@ import Button from "@mui/material/Button/Button";
 import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {
-  decodeToken,
-  ITask,
-  ITaskCreate,
-  IColumn,
-  ITaskUpdate,
-} from "../../@types/common";
+import { ITask, ITaskCreate, IColumn, ITaskUpdate } from "../../@types/common";
 import { useAppSelector } from "./../../hooks/redux";
 import { api } from "../../services/api";
 import styles from "./CreateTask.module.scss";

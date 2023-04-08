@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { decodeToken, IColumn, IColumnCreate } from "../../@types/common";
 import { api } from "../../services/api";
 import { setIsCreated } from "../../store/reducers/isColumnCreated";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 import styles from "./CreateColumn.module.scss";
 
 interface IProps {

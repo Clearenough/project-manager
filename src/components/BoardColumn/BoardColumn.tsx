@@ -1,19 +1,18 @@
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import Stack from "@mui/material/Stack/Stack";
-import { Droppable } from "react-beautiful-dnd";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Draggable } from "react-beautiful-dnd";
 import { useEffect, useState } from "react";
-import { useJwt } from "react-jwt";
 import { IColumn, ITask } from "../../@types/common";
 import { api } from "../../services/api";
 import ColumnTask from "../ColumnTask/ColumnTask";
 import CreateTask from "../CreateTask/CreateTask";
-import { calculateProvidedBy } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 import { sortDataByOrder } from "../../utils";
 import { StrictModeDroppable } from "../Droppable";
 import Typography from "@mui/material/Typography/Typography";
 import CreateColumn from "../CreateColumn/CreateColumn";
+import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 
 interface IProps {
   column: IColumn;
@@ -22,12 +21,14 @@ interface IProps {
 }
 
 function BoardColumn({ column, columnIndex, getTasks }: IProps) {
-  const { data, error } = api.useGetAllTasksQuery({
+  const { data, error: getError } = api.useGetAllTasksQuery({
     columnId: column._id,
     boardId: column.boardId,
   });
+  const [deleteColumn, { error: deleteError }] = api.useDeleteColumnMutation();
   const [isCreateTaskModalOpen, setCreateTaskModalOpen] = useState(false);
   const [isCreateColumnModalOpen, setCreateColumnModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   useEffect(() => {
     getTasks(data!, column._id);
   });
@@ -64,6 +65,11 @@ function BoardColumn({ column, columnIndex, getTasks }: IProps) {
               >
                 ...
               </Typography>
+              <Typography variant="body1">
+                <DeleteIcon
+                  onClick={() => setConfirmationModalOpen(true)}
+                ></DeleteIcon>
+              </Typography>
             </Box>
 
             <StrictModeDroppable droppableId={column._id} type="TASK">
@@ -99,6 +105,12 @@ function BoardColumn({ column, columnIndex, getTasks }: IProps) {
         <CreateColumn
           handler={() => setCreateColumnModalOpen(false)}
           column={column}
+        />
+      )}
+      {isConfirmationModalOpen && (
+        <ConfirmationModal
+          setVisible={setConfirmationModalOpen}
+          confirmationFunction={() => deleteColumn(column)}
         />
       )}
     </>

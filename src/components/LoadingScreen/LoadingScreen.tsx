@@ -18,10 +18,10 @@ function LoadingScreen() {
     >
       <Box
         sx={{
-          width: "10vw",
-          height: "10vw",
+          width: "8vw",
+          height: "8vw",
           position: "fixed",
-          left: " 50%",
+          left: "46%",
           transform: "translate(-50%, -50%)",
           background: "transparent",
           borderRadius: "100%",
